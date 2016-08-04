@@ -43,6 +43,16 @@ Unicode字符集表示表示各种字符，每个字符的表示都是固定的�
     u'\u4e2d\u6587'
     >>> print '\xe4\xb8\xad\xe6\x96\x87'.decode('utf-8')
     中文
+    
+    字符串的replace方法不会修改原有字符串内容，会重新生成新的字符串返回值。
+    >>> a = 'abc'
+    >>> b = a.replace('a', 'A')
+    >>> b
+    'Abc'
+    >>> a
+    'abc'
+
+    
 8、格式化
     %s  表示用字符串替换，
     %d  表示用整数替换
@@ -50,6 +60,7 @@ Unicode字符集表示表示各种字符，每个字符的表示都是固定的�
     %x	十六进制整数
 
 9、list  list是一种有序的集合，可以随时添加和删除其中的元素
+    >>> classmates = ['Michael', 'Bob', 'Tracy']
     >>> classmates[-1]                  ---最后一个元素
     >>> classmates.append('Adam')       ---末尾追加元素
     >>> classmates.insert(1, 'Jack')    ---插入指定位置元素
@@ -61,5 +72,152 @@ Unicode字符集表示表示各种字符，每个字符的表示都是固定的�
     >>> t = (1, 2)
     >>> t = (1,)            ---一个元素时的表示方式
     tuple内元素的指向是不变的，但指向list后，list的元素内容可以变。
+    
+11、dict     在其他语言中也称为map，使用键-值（key-value）存储，具有极快的查找速度
+    >>> d = {'Michael': 95, 'Bob': 75, 'Tracy': 85}
+    >>> d['Michael']
+    常用的方法：
+        >>> d['Adam'] = 67  ----手动指定某个key的值
+        测试key是否存在:
+        >>> 'Thomas' in d
+        False
+        >>> d.get('Thomas')     ----返回None
+        >>> d.get('Thomas', -1) ----返回自己指定的value
+        -1
+        >>> d.pop('Bob')        ----删除某个key
+    和list比较，dict有以下几个特点：
+
+        查找和插入的速度极快，不会随着key的增加而增加；
+        需要占用大量的内存，内存浪费多。
+
+    而list相反：
+
+        查找和插入的时间随着元素的增加而增加；
+        占用空间小，浪费内存很少。
+
+    所以，dict是用空间来换取时间的一种方法。
+
+12、set  set和dict类似，也是一组key的集合，但不存储value。由于key不能重复，所以，在set中，没有重复的key
+    >>> s = set([1, 2, 3])
+    >>> s.add(4)                ----增加元素
+    >>> s.remove(4)             ----删除元素
+    >>> s1 & s2                 ----取两个set的交集
+    >>> s1 | s2                 ----取两个set的并集
+    set和dict的唯一区别仅在于没有存储对应的value，但是，set的原理和dict一样，所以，同样不可以放入可变对象，因为无法判断两个可变对象是否相等，也就无法保证set内部“不会有重复元素”。试试把list放入set，看看是否会报错。
 
 
+    
+13、逻辑判断及循环：
+
+    if <条件判断1>:
+        <执行1>
+    elif <条件判断2>:
+        <执行2>
+    elif <条件判断3>:
+        <执行3>
+    else:
+        <执行4>
+
+    ----使用range(101)----------
+    sum = 0
+    for x in range(101):
+        sum = sum + x
+    print sum
+    
+    -------使用while------------
+    sum = 0
+    n = 99
+    while n > 0:
+        sum = sum + n
+        n = n - 2
+    print sum
+    
+    ----------raw_input----------
+    birth = int(raw_input('birth: '))
+    
+    
+14、数据类型转换
+
+    >>> int('123')
+    123
+    >>> int(12.34)
+    12
+    >>> float('12.34')
+    12.34
+    >>> str(1.23)
+    '1.23'
+    >>> unicode(100)
+    u'100'
+    >>> bool(1)
+    True
+    >>> bool('')
+    False
+
+15、函数         在语法上，返回一个tuple可以省略括号，而多个变量可以同时接收一个tuple，
+    按位置赋给对应的值，所以，Python的函数返回多值其实就是返回一个tuple， 但写起来更方便
+    def my_abs(x):
+        if not isinstance(x, (int, float)):
+            raise TypeError('bad operand type')
+        if x >= 0:
+            return x
+        else:
+            return -x    
+    
+    调用：
+    >>> x, y = move(100, 100, 60, math.pi / 6)
+    >>> print x, y
+    151.961524227 70.0
+    或者：
+    >>> r = move(100, 100, 60, math.pi / 6)
+    >>> print r
+    (151.96152422706632, 70.0)
+    
+    递归函数：   (已通过尾递归进行优化)
+    def fact(n):
+        return fact_iter(n, 1)
+
+    def fact_iter(num, product):
+        if num == 1:
+            return product
+        return fact_iter(num - 1, num * product)
+    
+16、函数参数
+    在Python中定义函数，可以用必选参数、默认参数、可变参数和关键字参数，这4种参数都可以一起使用，或者只用其中某些，但是请注意，参数定义的顺序必须是：必选参数、默认参数、可变参数和关键字参数。
+    函数定义：
+    def func(a, b, c=0, *args, **kw):
+        print 'a =', a, 'b =', b, 'c =', c, 'args =', args, 'kw =', kw
+    
+    函数调用：
+    >>> func(1, 2)
+    a = 1 b = 2 c = 0 args = () kw = {}
+    >>> func(1, 2, c=3)
+    a = 1 b = 2 c = 3 args = () kw = {}
+    >>> func(1, 2, 3, 'a', 'b')
+    a = 1 b = 2 c = 3 args = ('a', 'b') kw = {}
+    >>> func(1, 2, 3, 'a', 'b', x=99)
+    a = 1 b = 2 c = 3 args = ('a', 'b') kw = {'x': 99}
+    
+    通过一个tuple和dict，你也可以调用该函数：
+
+    >>> args = (1, 2, 3, 4)
+    >>> kw = {'x': 99}
+    >>> func(*args, **kw)
+    a = 1 b = 2 c = 3 args = (4,) kw = {'x': 99}
+
+    所以，对于任意函数，都可以通过类似func(*args, **kw)的形式调用它，无论它的参数是如何定义的。
+    默认参数一定要用不可变对象，如果是可变对象，运行会有逻辑错误！
+    要注意定义可变参数和关键字参数的语法：
+    *args是可变参数，args接收的是一个tuple；
+    **kw是关键字参数，kw接收的是一个dict。
+    以及调用函数时如何传入可变参数和关键字参数的语法：
+    可变参数既可以直接传入：func(1, 2, 3)，又可以先组装list或tuple，再通过*args传入：func(*(1, 2, 3))；
+    关键字参数既可以直接传入：func(a=1, b=2)，又可以先组装dict，再通过**kw传入：func(**{'a': 1, 'b': 2})。
+    使用*args和**kw是Python的习惯写法，当然也可以用其他参数名，但最好使用习惯用法。
+    
+    
+    
+    
+    
+    
+    
+    
