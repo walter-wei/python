@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 
 字符编码：
 1.ASCII编码：最早只有127个字母被编码到计算机里，也就是大小写英文字母、数字和一些符号，这个编码表被称为ASCII编码。
@@ -302,14 +305,64 @@ Unicode字符集表示表示各种字符，每个字符的表示都是固定的�
 	>>> sorted(['bob', 'about', 'Zoo', 'Credit'], cmp_ignore_case)
 	['about', 'bob', 'Credit', 'Zoo']
 	
+21、装饰器
+	假设我们要增强now()函数的功能，比如，在函数调用前后自动打印日志，但又不希望修改now()函数的定义，这种在代码运行期间动态增加功能的方式，称之为“装饰器”（Decorator）
+	一种方式：
+	def log(func):
+    def wrapper(*args, **kw):
+        print('call %s():' % func.__name__)
+        return func(*args, **kw)
+    return wrapper
 	
+	使用 @log  在调用前使用
+	
+	第二种方式：
+	import functools
+
+	def log(text):
+		def decorator(func):
+			@functools.wraps(func)
+			def wrapper(*args, **kw):
+				print('%s %s():' % (text, func.__name__))
+				return func(*args, **kw)
+			return wrapper
+		return decorator
+	
+	使用 @log('EXECUTE') 在调用前使用
+	decorator被称为装饰模式。OOP的装饰模式需要通过继承和组合来实现，而Python除了能支持OOP的decorator外，直接从语法层次支持decorator。Python的decorator可以用函数实现，也可以用类实现。
+	
+22、偏函数
+	Python的functools模块提供了很多有用的功能，其中一个就是偏函数（Partial function）
+	简单总结functools.partial的作用就是，把一个函数的某些参数给固定住（也就是设置默认值），返回一个新的函数，调用这个新函数会更简单
+	>>> import functools
+	>>> int2 = functools.partial(int, base=2)
+	>>> int2('1000000')
+	
+	max2 = functools.partial(max, 10)
+	实际上会把10作为*args的一部分自动加到左边，也就是max2(5, 6, 7) 相当于：
+	args = (10, 5, 6, 7)
+	max(*args)
+	
+23、模块(Module)
+	在Python中，一个.py文件就称之为一个模块（Module）
+	每一个包目录下面都会有一个__init__.py的文件，这个文件是必须存在的，否则，Python就把这个目录当成普通目录，而不是一个包。__init__.py可以是空文件，也可以有Python代码，因为__init__.py本身就是一个模块，而它的模块名就是mycompany
+	
+	正常的函数和变量名是公开的（public），可以被直接引用，比如：abc，x123，PI等；
+
+类似__xxx__这样的变量是特殊变量，可以被直接引用，但是有特殊用途，比如上面的__author__，__name__就是特殊变量，hello模块定义的文档注释也可以用特殊变量__doc__访问，我们自己的变量一般不要用这种变量名；
+
+类似_xxx和__xxx这样的函数或变量就是非公开的（private），不应该被直接引用，比如_abc，__abc等；
+
+之所以我们说，private函数和变量“不应该”被直接引用，而不是“不能”被直接引用，是因为Python并没有一种方法可以完全限制访问private函数或变量，但是，从编程习惯上不应该引用private函数或变量。
+
 	
 	
 一些常用的函数：
 str.capitalize() 方法返回字符串的一个副本，只有它的第一个字母大写；
 str.title() 方法返回"标题化"的字符串,就是说所有单词都是以大写开始，其余字母均为小写(见 istitle())
 str.strip([chars]) 方法用于移除字符串头尾指定的字符（默认为空格）.
-	
+int()函数可以把字符串转换为整数，当仅传入字符串时，int()函数默认按十进制转换. 	 int('12345', base=8)	 int2('1000000')为二进制转十进制。
+
 	
 	ctrl+G定位，ctrl+D填充。
 	
